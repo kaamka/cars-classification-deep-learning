@@ -1,16 +1,21 @@
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
+import json
+from analyse_results import plot_images
 
-train_dir = '../DATASETS/carsStanford_all/train'
-test_dir = '../DATASETS/carsStanford_all/test'
-HYPERPARAMS_FILE = 'hyperparams.json'
+
+
+#HYPERPARAMS_FILE = 'hyperparams.json'
 
 # read the hyperparams file and load into dictionary
-with open(HYPERPARAMS_FILE, "r") as read_file:
-    data = json.load(read_file)
+#with open(HYPERPARAMS_FILE, "r") as read_file:
+    #data = json.load(read_file)
 
-HYPERPARAMS = data['hyperparameters'][0]
+#HYPERPARAMS = data['hyperparameters'][0]
 
-datagen_train = ImageDataGenerator(
+def generate_train_test
+
+def create_data_generators(input_shape, batch_size, train_dir, test_dir, save_augumented=None):
+    datagen_train = ImageDataGenerator(
       rescale=1./255,
       rotation_range=180,
       width_shift_range=0.1,
@@ -22,15 +27,12 @@ datagen_train = ImageDataGenerator(
       fill_mode='nearest')
 
 
+    datagen_test = ImageDataGenerator(rescale=1./255)
 
-datagen_test = ImageDataGenerator(rescale=1./255)
-
-batch_size = HYPERPARAMS['BATCHSIZE']
-
-if True:
-    save_to_dir = None
-else:
-    save_to_dir='augmented_images/'
+    if save_augumented:
+        save_to_dir = None
+    else:
+        save_to_dir='augmented_images/'
     
 generator_train = datagen_train.flow_from_directory(directory=train_dir,
                                                     target_size=input_shape,
@@ -69,3 +71,15 @@ class_weight = compute_class_weight(class_weight='balanced',
                                     classes=np.unique(cls_train),
                                     y=cls_train)
 #generator.train, generator.test, cls_train, cls_test
+
+
+
+# obczaj dane
+# Load the first images from the train-set.
+images = load_images(image_paths=image_paths_train[555:564])
+
+# Get the true classes for those images.
+cls_true = cls_train[555:564]
+
+# Plot the images and labels using our helper-function above.
+plot_images(images=images, cls_true=cls_true, smooth=True)

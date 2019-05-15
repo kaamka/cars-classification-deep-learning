@@ -12,24 +12,9 @@ from tensorflow.python.keras.applications import VGG16
 #from tensorflow.python.keras.applications import preprocess_input, decode_predictions
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.optimizers import Adam, RMSprop, Adadelta
-# paths
-HYPERPARAMS_FILE = 'hyperparams.json'
-
-# read the hyperparams file and load into dictionary
-with open(HYPERPARAMS_FILE, "r") as read_file:
-    data = json.load(read_file)
-
-HYPERPARAMS = data['hyperparameters'][0]
 
 
-# import model func - arg: hyperparams, return base model
-
-base_model = VGG16(weights=HYPERPARAMS['WEIGHTS'], 
-                      include_top=False, input_shape=(224,224,3))
-
-input_shape = base_model.layers[0].output_shape[1:3]
-
-def build_finetune_model(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes):
+def finetune_vgg16_model(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes):
     for layer in base_model.layers[:-x_trainable]:
         layer.trainable = False
 
