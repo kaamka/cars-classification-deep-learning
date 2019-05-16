@@ -3,12 +3,14 @@ import matplotlib.pyplot as plt
 import PIL
 from sklearn.metrics import confusion_matrix
 import numpy as np
-
+#CLASS pred
+'''contains'''
+#make class?
 
 def path_join(dirname, filenames):
     return [os.path.join(dirname, filename) for filename in filenames]
 
-def plot_images(images, cls_true, cls_pred=None, smooth=True):
+def plot_images(images, cls_true, class_names, cls_pred=None, smooth=True):
     '''Function used to plot at most 9 images in a 3x3 grid, 
     and writing the true and predicted classes below each image.'''
     assert len(images) == len(cls_true)
@@ -62,7 +64,7 @@ def plot_images(images, cls_true, cls_pred=None, smooth=True):
     
 
 
-def print_confusion_matrix(cls_pred):
+def print_confusion_matrix(cls_pred, cls_test, class_names):
     '''Helper-function for printing confusion matrix'''
     # cls_pred is an array of the predicted class-number for
     # all images in the test-set.
@@ -81,7 +83,7 @@ def print_confusion_matrix(cls_pred):
         print("({0}) {1}".format(i, class_name))
         
         
-def plot_example_errors(cls_pred):
+def plot_example_errors(cls_test, cls_pred, class_names, image_paths_test):
     '''Function for plotting examples of images from the test-set that have been mis-classified.'''
     # cls_pred is an array of the predicted class-number for
     # all images in the test-set.
@@ -103,12 +105,12 @@ def plot_example_errors(cls_pred):
     
     # Plot the 9 images we have loaded and their corresponding classes.
     # We have only loaded 9 images so there is no need to slice those again.
-    plot_images(images=images,
+    plot_images(images=images, class_names=class_names,
                 cls_true=cls_true[0:9],
                 cls_pred=cls_pred[0:9])
     
     
-def example_errors(new_model):
+def example_errors(new_model, generator_test, steps_test):
     '''The Keras data-generator for the test-set must be reset
     before processing. This is because the generator will loop
     infinitely and keep an internal index into the dataset.
@@ -141,32 +143,8 @@ def load_images(image_paths):
     return np.asarray(images)
 
 
-def plot_training_history(history):
-    # Get the classification accuracy and loss-value
-    # for the training-set.
-    acc = history.history['categorical_accuracy']
-    loss = history.history['loss']
-
-    # Get it for the validation-set (we only use the test-set).
-    val_acc = history.history['val_categorical_accuracy']
-    val_loss = history.history['val_loss']
-
-    # Plot the accuracy and loss-values for the training-set.
-    plt.plot(acc, linestyle='-', color='b', label='Training Acc.')
-    plt.plot(loss, 'o', color='b', label='Training Loss')
-    
-    # Plot it for the test-set.
-    plt.plot(val_acc, linestyle='--', color='r', label='Test Acc.')
-    plt.plot(val_loss, 'o', color='r', label='Test Loss')
-
-    # Plot title and legend.
-    plt.title('Training and Test Accuracy')
-    plt.legend()
-
-    # Ensure the plot shows correctly.
-    plt.show()
-
-result = finetune_model.evaluate_generator(generator_test, steps=steps_test)
-result_train = finetune_model.evaluate_generator(generator_train, steps=steps_per_epoch)
-print("Train-set classification accuracy: {0:.2%}".format(result_train[1]))
-print("Test-set classification accuracy: {0:.2%}".format(result[1]))
+def print_final_acc(model, generator_test, generator_train):
+    result = model.evaluate_generator(generator_test, steps=steps_test)
+    result_train = model.evaluate_generator(generator_train, steps=steps_per_epoch)
+    print("Train-set classification accuracy: {0:.2%}".format(result_train[1]))
+    print("Test-set classification accuracy: {0:.2%}".format(result[1]))

@@ -1,8 +1,10 @@
 from create_model import finetune_vgg16_model
 import json, codecs
+import numpy as np
 import datetime
 import os
-import matplotlib as plt
+import matplotlib.pyplot as plt
+from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.python.keras.models import Model, Sequential, load_model
 from tensorflow.python.keras.layers import Dense, Flatten, Dropout,GlobalAveragePooling2D,Input
 from tensorflow.python.keras.applications import VGG16
@@ -60,7 +62,7 @@ def loadHist(path):
         n = json.loads(f.read())
     return n
 
-def plot_training(history):
+def plot_training(history, path):
     acc = history.history['acc']
     val_acc = history.history['val_acc']
     loss = history.history['loss']
@@ -75,9 +77,38 @@ def plot_training(history):
     plt.plot(epochs, loss, 'b')
     plt.plot(epochs, val_loss, 'r')
     plt.title('Training and validation loss')
+    plt.savefig(path)
     plt.show()
-    plt.savefig('acc_vs_epochs.png')
+    
 
+
+def plot_training_history(history, path):
+    # Get the classification accuracy and loss-value
+    # for the training-set.
+    acc = history.history['categorical_accuracy']
+    loss = history.history['loss']
+
+    # Get it for the validation-set (we only use the test-set).
+    val_acc = history.history['val_categorical_accuracy']
+    val_loss = history.history['val_loss']
+
+    # Plot the accuracy and loss-values for the training-set.
+    plt.plot(acc, linestyle='-', color='b', label='Training Acc.')
+    plt.plot(loss, 'o', color='b', label='Training Loss')
+    
+    # Plot it for the test-set.
+    plt.plot(val_acc, linestyle='--', color='r', label='Test Acc.')
+    plt.plot(val_loss, 'o', color='r', label='Test Loss')
+
+    # Plot title and legend.
+    plt.title('Training and Test Accuracy')
+    plt.legend()
+
+    # Save the image
+    plt.savefig(path)
+
+    # Ensure the plot shows correctly.
+    plt.show()
 
 if __name__ == "__main__":
     TRAINING_TIME_PATH = create_folder_with_results()
@@ -93,6 +124,7 @@ if __name__ == "__main__":
     #compile
     optimizer = Adam(lr=HYPERPARAMS['LEARN_RATE'])
     finetune_model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+    #generator_train = 
     #train
     history = finetune_model.fit_generator(generator=generator_train,
                                   epochs=epochs,
@@ -110,5 +142,5 @@ if __name__ == "__main__":
     with open(TRAINING_TIME_PATH +'/model_summary', 'w') as f:
         f.write(str(finetune_model.summary()))
         
-    plot_training(history)
+    plot_training(history, TRAINING_TIME_PATH +'/acc_vs_epochs.png')
     print(str(history.history))
