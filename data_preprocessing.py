@@ -1,4 +1,4 @@
-from analyse_results import plot_images
+from analyse_results import plot_images, load_images
 from analyse_results import path_join
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import json
@@ -47,14 +47,14 @@ def create_data_generators(input_shape, batch_size,
                                                   batch_size=batch_size,
                                                   shuffle=False)
     if plot_imgs:
-        plot_some_images(train_dir, test_dir, generator_train, generator_test)
+        plot_some_images(train_dir, generator_train)
     return generator_train, generator_test
 
 
-def plot_some_images(train_dir, test_dir, generator_train, generator_test):
+def plot_some_images(train_dir, generator_train):
 
     image_paths_train = path_join(train_dir, generator_train.filenames)
-    image_paths_test = path_join(test_dir, generator_test.filenames)
+    #image_paths_test = path_join(test_dir, generator_test.filenames)
 
     # Load the first images from the train-set.
     images = load_images(image_paths=image_paths_train[555:564])
@@ -64,4 +64,16 @@ def plot_some_images(train_dir, test_dir, generator_train, generator_test):
     cls_true = cls_train[555:564]
 
     # Plot the images and labels using our helper-function above.
-    plot_images(images=images, cls_true=cls_true, smooth=True)
+    class_names = list(generator_train.class_indices.keys())
+    plot_images(images=images, cls_true=cls_true, class_names = class_names, smooth=True)
+
+
+if __name__ == "__main__":
+    # data
+    #local
+    TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/train'
+    TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/test'
+    create_data_generators((224,224,3), 20, 
+                            TRAIN_DIR, TEST_DIR, 
+                            save_augumented=None, plot_imgs = True)
+    
