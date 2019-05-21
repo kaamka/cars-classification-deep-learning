@@ -1,2 +1,5 @@
-dlenv
+
 hyperparams.json
+.vscode/
+__pycache__/
+deeplenv/
