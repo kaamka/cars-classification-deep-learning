@@ -30,3 +30,13 @@ def finetune_vgg16_model(base_model, transfer_layer, x_trainable, dropout, fc_la
     finetune_model = Model(inputs=base_model.input, outputs=predictions)
     return finetune_model
 # return model
+
+
+if __name__ == "__main__":
+    base_model = VGG16(weights='imagenet', 
+                      include_top=False, input_shape=(224,224,3))
+    input_shape = base_model.layers[0].output_shape[1:3]
+    transfer_layer = base_model.get_layer(index=-1)
+    new_model = finetune_vgg16_model(base_model, transfer_layer, 5, 0.5, [1024, 1024], 196)
+    optimizer = Adam(lr=0.000001)
+    new_model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy'])

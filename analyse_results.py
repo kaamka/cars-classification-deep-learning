@@ -110,7 +110,8 @@ def plot_example_errors(cls_test, cls_pred, class_names, image_paths_test):
                 cls_pred=cls_pred[0:9])
     
     
-def example_errors(new_model, generator_test, steps_test):
+def example_errors(new_model, generator_test, steps_test, cls_test, class_names, image_paths_test):
+    
     '''The Keras data-generator for the test-set must be reset
     before processing. This is because the generator will loop
     infinitely and keep an internal index into the dataset.
@@ -129,10 +130,10 @@ def example_errors(new_model, generator_test, steps_test):
     cls_pred = np.argmax(y_pred,axis=1)
 
     # Plot examples of mis-classified images.
-    plot_example_errors(cls_pred)
+    plot_example_errors(cls_test, cls_pred, class_names, image_paths_test)
     
     # Print the confusion matrix.
-    print_confusion_matrix(cls_pred)
+    print_confusion_matrix(cls_pred, cls_test, class_names)
     
     
 def load_images(image_paths):
@@ -143,8 +144,8 @@ def load_images(image_paths):
     return np.asarray(images)
 
 
-def print_final_acc(model, generator_test, generator_train):
+def print_final_acc(model, generator_test, generator_train, steps_train, steps_test):
     result = model.evaluate_generator(generator_test, steps=steps_test)
-    result_train = model.evaluate_generator(generator_train, steps=steps_per_epoch)
+    result_train = model.evaluate_generator(generator_train, steps=steps_train)
     print("Train-set classification accuracy: {0:.2%}".format(result_train[1]))
     print("Test-set classification accuracy: {0:.2%}".format(result[1]))

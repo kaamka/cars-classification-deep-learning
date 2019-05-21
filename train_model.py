@@ -1,4 +1,5 @@
 from create_model import finetune_vgg16_model
+from data_preprocessing import create_data_generators
 import json, codecs
 import numpy as np
 import datetime
@@ -12,13 +13,15 @@ from tensorflow.python.keras.applications import VGG16
 #from tensorflow.python.keras.applications import preprocess_input, decode_predictions
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.optimizers import Adam, RMSprop, Adadelta
+from sklearn.utils.class_weight import compute_class_weight
 
-EPOCHS = ''
-FC_LAYERS = ''
-DROPOUT = ''
-HYPERPARAMS_FILE = 'hyperprams.json'
+HYPERPARAMS_FILE = 'hyperparams.json'
+#inteligate
 TRAIN_DIR = '../DATASETS/carsStanford_all/train'
 TEST_DIR = '../DATASETS/carsStanford_all/test'
+#local
+TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/train'
+TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/test'
 
 with open(HYPERPARAMS_FILE, "r") as read_file:
     data = json.load(read_file)
@@ -28,12 +31,16 @@ EPOCHS = HYPERPARAMS['EPOCHS']
 FC_LAYERS = HYPERPARAMS['FC_LAYERS']
 EPOCHS = HYPERPARAMS['DROPOUT']
 WEIGHTS = HYPERPARAMS['WEIGHTS']
+TRAIN_LAYERS = HYPERPARAMS['TRAIN_LAYERS']
+BATCHSIZE = HYPERPARAMS['BATCHSIZE']
+DROPOUT = HYPERPARAMS['DROPOUT']
+
 
 def create_folder_with_results():
     now = datetime.datetime.now()
     training_time = now.strftime("%Y%m%d_%H%M")
     # name of dir due to today date
-    TRAINING_TIME_PATH = "saved_models/" + training_time
+    TRAINING_TIME_PATH = "../saved_models/" + training_time
     access_rights = 0o755
     try:  
         os.makedirs(TRAINING_TIME_PATH, access_rights)
@@ -110,28 +117,56 @@ def plot_training_history(history, path):
     # Ensure the plot shows correctly.
     plt.show()
 
+
+
+'''
+cls_train = generator_train.classes
+cls_test = generator_test.classes
+class_names = list(generator_train.class_indices.keys())
+num_classes = generator_train.num_classes
+class_weight = compute_class_weight(class_weight='balanced',
+                                    classes=np.unique(cls_train),
+                                    y=cls_train)
+
+steps_per_epoch = generator_train.n / batch_size 
+steps_test = generator_test.n / batch_size
+'''
+
 if __name__ == "__main__":
     TRAINING_TIME_PATH = create_folder_with_results()
 
     base_model = VGG16(weights=WEIGHTS, 
                       include_top=False, input_shape=(224,224,3))
     input_shape = base_model.layers[0].output_shape[1:3]
-    finetune_model = finetune_vgg16_model(base_model, transfer_layer, HYPERPARAMS['TRAIN_LAYERS'], 
+    transfer_layer = base_model.get_layer(index=-1)
+    generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
+                            TRAIN_DIR, TEST_DIR, 
+                            save_augumented=None, plot_imgs = False)
+    finetune_model = finetune_vgg16_model(base_model, transfer_layer, TRAIN_LAYERS, 
                                       dropout=DROPOUT, 
                                       fc_layers=FC_LAYERS, 
-                                      num_classes= num_classes)
+                                      num_classes= generator_train.num_classes)
     
     #compile
     optimizer = Adam(lr=HYPERPARAMS['LEARN_RATE'])
     finetune_model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-    #generator_train = 
+    class_weight = compute_class_weight(class_weight='balanced',
+                                    classes=np.unique(generator_train.classes),
+                                    y=generator_train.classes)
     #train
+    #generator_train.n // BATCHSIZE
+
+
+    epochs = 20
+    steps_per_epoch = 100
+
+
     history = finetune_model.fit_generator(generator=generator_train,
                                   epochs=epochs,
                                   steps_per_epoch=steps_per_epoch,
                                   class_weight=class_weight,
                                   validation_data=generator_test,
-                                  validation_steps=steps_test)
+                                  validation_steps=400)
     #save
     NEW_MODEL_PATH = TRAINING_TIME_PATH+'/newmodel.h5'
     finetune_model.save(NEW_MODEL_PATH)
@@ -143,4 +178,5 @@ if __name__ == "__main__":
         f.write(str(finetune_model.summary()))
         
     plot_training(history, TRAINING_TIME_PATH +'/acc_vs_epochs.png')
+    #save png file
     print(str(history.history))
