@@ -166,7 +166,7 @@ if __name__ == "__main__":
                                   steps_per_epoch=steps_per_epoch,
                                   class_weight=class_weight,
                                   validation_data=generator_test,
-                                  validation_steps=400)
+                                  validation_steps=steps_per_epoch)
     #save
     NEW_MODEL_PATH = TRAINING_TIME_PATH+'/newmodel.h5'
     finetune_model.save(NEW_MODEL_PATH)

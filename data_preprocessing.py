@@ -19,7 +19,7 @@ steps_test = generator_test.n / batch_size
 
 def create_data_generators(input_shape, batch_size, 
                             train_dir, test_dir, 
-                            save_augumented=None, plot_imgs = False):
+                            save_augumented=False, plot_imgs = False):
     datagen_train = ImageDataGenerator(
       rescale=1./255,
       rotation_range=180,
@@ -31,10 +31,11 @@ def create_data_generators(input_shape, batch_size,
       vertical_flip=True,
       fill_mode='nearest')
     datagen_test = ImageDataGenerator(rescale=1./255)
+
     if save_augumented:
-        save_to_dir = None
-    else:
         save_to_dir='augmented_images/'
+    else:
+        save_to_dir = None
 
     generator_train = datagen_train.flow_from_directory(directory=train_dir,
                                                     target_size=input_shape,
