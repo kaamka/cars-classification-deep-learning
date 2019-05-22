@@ -157,16 +157,16 @@ if __name__ == "__main__":
     #generator_train.n // BATCHSIZE
 
 
-    epochs = 20
-    steps_per_epoch = 100
+    epochs = HYPERPARAMS['EPOCHS']
+    #steps_per_epoch = 400
 
 
     history = finetune_model.fit_generator(generator=generator_train,
-                                  epochs=epochs,
-                                  steps_per_epoch=steps_per_epoch,
+                                  epochs=20,
+                                  steps_per_epoch=generator_train.n // BATCHSIZE,
                                   class_weight=class_weight,
                                   validation_data=generator_test,
-                                  validation_steps=steps_per_epoch)
+                                  validation_steps=generator_test.n // BATCHSIZE)
     #save
     NEW_MODEL_PATH = TRAINING_TIME_PATH+'/newmodel.h5'
     finetune_model.save(NEW_MODEL_PATH)
