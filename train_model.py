@@ -14,6 +14,8 @@ from tensorflow.python.keras.applications import VGG16
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.optimizers import Adam, RMSprop, Adadelta
 from sklearn.utils.class_weight import compute_class_weight
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping
 
 HYPERPARAMS_FILE = 'hyperparams.json'
 #inteligate
@@ -153,23 +155,32 @@ if __name__ == "__main__":
     class_weight = compute_class_weight(class_weight='balanced',
                                     classes=np.unique(generator_train.classes),
                                     y=generator_train.classes)
-    #train
-    #generator_train.n // BATCHSIZE
 
+    # CHECKPOINTS
+    NEW_MODEL_PATH_STRUCTURE = TRAINING_TIME_PATH+'/weights.best.hdf5'
+    checkpoint = ModelCheckpoint(NEW_MODEL_PATH_STRUCTURE, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+    callbacks_list = [checkpoint]
 
+    # generator_train.n // BATCHSIZE
+
+    # Fit the model - train
     epochs = HYPERPARAMS['EPOCHS']
-    #steps_per_epoch = 400
-
-
+    epochs = 1
     history = finetune_model.fit_generator(generator=generator_train,
-                                  epochs=20,
+                                  epochs=epochs,
                                   steps_per_epoch=generator_train.n // BATCHSIZE,
                                   class_weight=class_weight,
                                   validation_data=generator_test,
-                                  validation_steps=generator_test.n // BATCHSIZE)
-    #save
-    NEW_MODEL_PATH = TRAINING_TIME_PATH+'/newmodel.h5'
-    finetune_model.save(NEW_MODEL_PATH)
+                                  validation_steps=generator_test.n // BATCHSIZE,
+                                  callbacks=callbacks_list, verbose=0)
+    #save model architecture
+    NEW_MODEL_PATH_STRUCTURE = TRAINING_TIME_PATH+'/model.json'
+    # serialize model to JSON
+    model_json = finetune_model.to_json()
+    with open(NEW_MODEL_PATH_STRUCTURE, "w") as json_file:
+        json_file.write(model_json)
+
+    #finetune_model.save(NEW_MODEL_PATH)
 
     with open(TRAINING_TIME_PATH +'/history.txt', 'w') as f:  
         f.write(str(history.history))
@@ -178,5 +189,4 @@ if __name__ == "__main__":
         f.write(str(finetune_model.summary()))
         
     plot_training(history, TRAINING_TIME_PATH +'/acc_vs_epochs.png')
-    #save png file
-    print(str(history.history))
+    #print(str(history.history))

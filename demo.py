@@ -43,8 +43,22 @@ car_class = 'BMW 3 Series Sedan 2012'
 test_dir = '../DATASETS/carsStanford_all/test/' + car_class
 test_img = test_dir + '/' + random.choice(os.listdir(test_dir))
 
-        
+# load json and create model
+json_file = open('model.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+loaded_model = model_from_json(loaded_model_json)
+# load weights into new model
+loaded_model.load_weights("model.h5")
+print("Loaded model from disk")
+ 
+# evaluate loaded model on test data
+loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+score = loaded_model.evaluate(X, Y, verbose=0)
+print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1]*100))       
 #test_img = '../DATASETS/test_imgs/f.png'
+
+# load model weigths & structure simultanously
 model_path = NEW_MODEL_PATH
 #model_path = 'saved_models/20190502_1643/vgg16_.h5'
 model = load_model(model_path)
