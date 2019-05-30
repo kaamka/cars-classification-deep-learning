@@ -1,4 +1,4 @@
-from create_model import finetune_vgg16_model
+from create_model import finetune_vgg16_model, finetune_resnet50_model
 from data_preprocessing import create_data_generators
 import json, codecs
 import numpy as np
@@ -9,6 +9,7 @@ from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.python.keras.models import Model, Sequential, load_model
 from tensorflow.python.keras.layers import Dense, Flatten, Dropout,GlobalAveragePooling2D,Input
 from tensorflow.python.keras.applications import VGG16
+from tensorflow.keras.applications.resnet50 import ResNet50
 #from tensorflow.keras.applications.resnet50 import ResNet50
 #from tensorflow.python.keras.applications import preprocess_input, decode_predictions
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
@@ -17,13 +18,19 @@ from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import EarlyStopping
 
+#scp train_model.py inteligate:~/translearn
+#scp hyperparams.json inteligate:~/translearn
+
 HYPERPARAMS_FILE = 'hyperparams.json'
-#inteligate
-TRAIN_DIR = '../DATASETS/carsStanford_all/train'
-TEST_DIR = '../DATASETS/carsStanford_all/test'
-#local
-TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/train'
-TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/test'
+
+if (os.getcwd() == '/home/kalkami/translearn'):
+    #inteligate
+    TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
+    TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
+else:
+    #local
+    TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/train'
+    TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
 
 with open(HYPERPARAMS_FILE, "r") as read_file:
     data = json.load(read_file)
@@ -36,6 +43,7 @@ WEIGHTS = HYPERPARAMS['WEIGHTS']
 TRAIN_LAYERS = HYPERPARAMS['TRAIN_LAYERS']
 BATCHSIZE = HYPERPARAMS['BATCHSIZE']
 DROPOUT = HYPERPARAMS['DROPOUT']
+NEW_WEIGHTS = HYPERPARAMS['NEW_WEIGHTS'] 
 
 
 def create_folder_with_results():
@@ -136,19 +144,20 @@ steps_test = generator_test.n / batch_size
 
 if __name__ == "__main__":
     TRAINING_TIME_PATH = create_folder_with_results()
-
-    base_model = VGG16(weights=WEIGHTS, 
+    base_model = ResNet50(weights=WEIGHTS, 
                       include_top=False, input_shape=(224,224,3))
     input_shape = base_model.layers[0].output_shape[1:3]
     transfer_layer = base_model.get_layer(index=-1)
     generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
                             TRAIN_DIR, TEST_DIR, 
                             save_augumented=None, plot_imgs = False)
-    finetune_model = finetune_vgg16_model(base_model, transfer_layer, TRAIN_LAYERS, 
+    finetune_model = finetune_resnet50_model(base_model, transfer_layer, TRAIN_LAYERS, 
                                       dropout=DROPOUT, 
                                       fc_layers=FC_LAYERS, 
-                                      num_classes= generator_train.num_classes)
-    
+                                      num_classes= generator_train.num_classes,
+                                      new_weights=NEW_WEIGHTS)
+    # load weights from last best training
+
     #compile
     optimizer = Adam(lr=HYPERPARAMS['LEARN_RATE'])
     finetune_model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
@@ -165,7 +174,7 @@ if __name__ == "__main__":
 
     # Fit the model - train
     epochs = HYPERPARAMS['EPOCHS']
-    epochs = 1
+    #epochs = 200
     history = finetune_model.fit_generator(generator=generator_train,
                                   epochs=epochs,
                                   steps_per_epoch=generator_train.n // BATCHSIZE,
@@ -185,8 +194,9 @@ if __name__ == "__main__":
     with open(TRAINING_TIME_PATH +'/history.txt', 'w') as f:  
         f.write(str(history.history))
 
-    with open(TRAINING_TIME_PATH +'/model_summary', 'w') as f:
-        f.write(str(finetune_model.summary()))
+    with open(TRAINING_TIME_PATH +'/model_summary.txt', 'w') as fh:
+    # Pass the file handle in as a lambda function to make it callable
+        finetune_model.summary(print_fn=lambda x: fh.write(x + '\n'))
         
     plot_training(history, TRAINING_TIME_PATH +'/acc_vs_epochs.png')
     #print(str(history.history))
