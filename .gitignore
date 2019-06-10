@@ -3,3 +3,4 @@ hyperparams.json
 .vscode/
 __pycache__/
 deeplenv/
+create_model.pyc

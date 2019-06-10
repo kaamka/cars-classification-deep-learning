@@ -1,4 +1,5 @@
 from create_model import finetune_vgg16_model, finetune_resnet50_model
+from create_model import finetune_inceptionv3
 from data_preprocessing import create_data_generators
 import json, codecs
 import numpy as np
@@ -10,6 +11,7 @@ from tensorflow.python.keras.models import Model, Sequential, load_model
 from tensorflow.python.keras.layers import Dense, Flatten, Dropout,GlobalAveragePooling2D,Input
 from tensorflow.python.keras.applications import VGG16
 from tensorflow.keras.applications.resnet50 import ResNet50
+from tensorflow.keras.applications.inception_v3 import InceptionV3
 #from tensorflow.keras.applications.resnet50 import ResNet50
 #from tensorflow.python.keras.applications import preprocess_input, decode_predictions
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
@@ -20,6 +22,9 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 #scp train_model.py inteligate:~/translearn
 #scp hyperparams.json inteligate:~/translearn
+import tensorflow as tf
+tf.test.gpu_device_name()
+
 
 HYPERPARAMS_FILE = 'hyperparams.json'
 
@@ -79,22 +84,24 @@ def loadHist(path):
         n = json.loads(f.read())
     return n
 
-def plot_training(history, path):
+def plot_training(history, path_acc, path_loss):
     acc = history.history['acc']
     val_acc = history.history['val_acc']
     loss = history.history['loss']
     val_loss = history.history['val_loss']
     epochs = range(len(acc))
 
+    plt.figure()
     plt.plot(epochs, acc, 'b')
     plt.plot(epochs, val_acc, 'r')
     plt.title('Training and validation accuracy')
+    plt.savefig(path_acc)
 
     plt.figure()
     plt.plot(epochs, loss, 'b')
     plt.plot(epochs, val_loss, 'r')
     plt.title('Training and validation loss')
-    plt.savefig(path)
+    plt.savefig(path_loss)
     plt.show()
     
 
@@ -144,19 +151,20 @@ steps_test = generator_test.n / batch_size
 
 if __name__ == "__main__":
     TRAINING_TIME_PATH = create_folder_with_results()
-    base_model = ResNet50(weights=WEIGHTS, 
-                      include_top=False, input_shape=(224,224,3))
+    # base_model = ResNet50(weights=WEIGHTS, 
+    #                   include_top=False, input_shape=(224,224,3))
+    base_model = InceptionV3(weights=WEIGHTS, include_top=False, input_shape=(299,299,3))
     input_shape = base_model.layers[0].output_shape[1:3]
     transfer_layer = base_model.get_layer(index=-1)
     generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
                             TRAIN_DIR, TEST_DIR, 
                             save_augumented=None, plot_imgs = False)
-    finetune_model = finetune_resnet50_model(base_model, transfer_layer, TRAIN_LAYERS, 
+    finetune_model = finetune_inceptionv3(base_model, transfer_layer, TRAIN_LAYERS, 
                                       dropout=DROPOUT, 
                                       fc_layers=FC_LAYERS, 
                                       num_classes= generator_train.num_classes,
                                       new_weights=NEW_WEIGHTS)
-    # load weights from last best training
+    # load weights from last best training by new weights
 
     #compile
     optimizer = Adam(lr=HYPERPARAMS['LEARN_RATE'])
@@ -198,5 +206,7 @@ if __name__ == "__main__":
     # Pass the file handle in as a lambda function to make it callable
         finetune_model.summary(print_fn=lambda x: fh.write(x + '\n'))
         
-    plot_training(history, TRAINING_TIME_PATH +'/acc_vs_epochs.png')
+    plot_training(history, 
+        TRAINING_TIME_PATH +'/acc_vs_epochs.png', 
+        TRAINING_TIME_PATH +'/loss_vs_epochs.png')
     #print(str(history.history))

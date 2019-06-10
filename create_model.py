@@ -15,7 +15,7 @@ from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.optimizers import Adam, RMSprop, Adadelta
 
 
-def finetune_vgg16_model(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes):
+def finetune_vgg16_model(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes, new_weights = ""):
     for layer in base_model.layers[:-x_trainable]:
         layer.trainable = False
 
@@ -29,10 +29,12 @@ def finetune_vgg16_model(base_model, transfer_layer, x_trainable, dropout, fc_la
     # New softmax layer
     predictions = Dense(num_classes, activation='softmax')(x)  
     finetune_model = Model(inputs=base_model.input, outputs=predictions)
+    if new_weights != "":
+        finetune_model.load_weights(new_weights)
     return finetune_model
 
 
-def finetune_resnet50_model(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes, new_weights = None):
+def finetune_resnet50_model(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes, new_weights = ""):
     for layer in base_model.layers[:-x_trainable]:
         layer.trainable = False
 
@@ -47,7 +49,21 @@ def finetune_resnet50_model(base_model, transfer_layer, x_trainable, dropout, fc
     # New softmax layer
     predictions = Dense(num_classes, activation='softmax')(x)  
     finetune_model = Model(inputs=base_model.input, outputs=predictions)
-    if new_weights is not None:
+    if new_weights != "":
+        finetune_model.load_weights(new_weights)
+    return finetune_model
+
+
+def finetune_inceptionv3(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes, new_weights = ""):
+    for layer in base_model.layers[:-x_trainable]:
+        layer.trainable = False
+
+    x = transfer_layer.output
+    x = GlobalAveragePooling2D(name='avg_pool')(x)
+    x = Dropout(0.4)(x)
+    predictions = Dense(num_classes, activation='softmax')(x)  
+    finetune_model = Model(inputs=base_model.input, outputs=predictions)
+    if new_weights != "":
         finetune_model.load_weights(new_weights)
     return finetune_model
 
