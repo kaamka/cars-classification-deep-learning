@@ -22,6 +22,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 #scp train_model.py inteligate:~/translearn
 #scp hyperparams.json inteligate:~/translearn
+#scp train_model.py create_model.py data_preprocessing.py analyse_results.py demo.py hyperparams.json inteligate:~/translearn
 import tensorflow as tf
 tf.test.gpu_device_name()
 
@@ -182,7 +183,12 @@ if __name__ == "__main__":
 
     # Fit the model - train
     epochs = HYPERPARAMS['EPOCHS']
-    #epochs = 200
+    #save model architecture
+    NEW_MODEL_PATH_STRUCTURE = TRAINING_TIME_PATH+'/model.json'
+    # serialize model to JSON
+    model_json = finetune_model.to_json()
+    with open(NEW_MODEL_PATH_STRUCTURE, "w") as json_file:
+        json_file.write(model_json)
     history = finetune_model.fit_generator(generator=generator_train,
                                   epochs=epochs,
                                   steps_per_epoch=generator_train.n // BATCHSIZE,
@@ -190,15 +196,8 @@ if __name__ == "__main__":
                                   validation_data=generator_test,
                                   validation_steps=generator_test.n // BATCHSIZE,
                                   callbacks=callbacks_list, verbose=0)
-    #save model architecture
-    NEW_MODEL_PATH_STRUCTURE = TRAINING_TIME_PATH+'/model.json'
-    # serialize model to JSON
-    model_json = finetune_model.to_json()
-    with open(NEW_MODEL_PATH_STRUCTURE, "w") as json_file:
-        json_file.write(model_json)
 
     #finetune_model.save(NEW_MODEL_PATH)
-
     with open(TRAINING_TIME_PATH +'/history.txt', 'w') as f:  
         f.write(str(history.history))
 
