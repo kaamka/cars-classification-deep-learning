@@ -2,14 +2,16 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import model_from_json
 import matplotlib.pyplot as plt
 import numpy as np
-import os, random
-import os, random
+import os, random, sys
 from data_preprocessing import create_data_generators
 import json
+import pickle
+
 
 # arguments given in terminal: RESULTS_FOLDER, CAR_CLASS
 # default
 RESULTS_FOLDER = "../saved_models/20190610_1512"
+RESULTS_FOLDER = "../saved_models/20190612_1048"
 #20190612_1048
 if (os.getcwd() == '/home/kalkami/translearn'):
     #lhcpgpu1
@@ -82,8 +84,8 @@ def perform_pred(car_class, results_folder=RESULTS_FOLDER, test_dir=TEST_DIR_TST
 
     if img_pth is None:   
         # randomly select an image from defined class     
-        test_dir = test_dir + '/' + car_class
-        test_img = test_dir + '/' + random.choice(os.listdir(test_dir))
+        test_dir_full = test_dir + '/' + car_class
+        test_img = test_dir_full + '/' + random.choice(os.listdir(test_dir_full))
     else:
         test_img = img_pth
     # load json and create model
@@ -99,14 +101,36 @@ def perform_pred(car_class, results_folder=RESULTS_FOLDER, test_dir=TEST_DIR_TST
                                                                 TRAIN_DIR, TEST_DIR, 
                                                                 save_augumented=None, 
                                                                 plot_imgs = False) 
-    class_names = list(generator_train.class_indices.keys()) 
+    class_names = list(generator_train.class_indices.keys())
+    # with open ("class_names.txt", "wb") as fp:
+    #     pickle.dump(class_names, fp) 
     predict(test_img, loaded_model, input_shape, class_names, car_class)
 
 
-io = True
-#if __name__ == "__main__":
-if io:
-    perform_pred('Audi A5 Coupe 2012', results_folder="../saved_models/20190612_1048")
+if __name__ == "__main__":
+    #img_test = '../test_imgs/f.png'
+    # Audi A5 Coupe 2012
+    print(sys.argv)
+    if len(sys.argv) == 1:
+        print('Too few arguments.')
+    elif len(sys.argv) == 2:
+        perform_pred(sys.argv[1])
+    elif len(sys.argv) == 3:
+        if str(sys.argv[2]).endswith('.jpg') or str(sys.argv[2]).endswith('.png'):
+            perform_pred(sys.argv[1], img_pth=sys.argv[2])
+        else:
+            perform_pred(sys.argv[1], results_folder=sys.argv[2])
+    elif len(sys.argv) == 4:
+        if str(sys.argv[3]).endswith('.jpg') or str(sys.argv[3]).endswith('.png'):
+            perform_pred(sys.argv[1], results_folder=sys.argv[2], 
+                            img_pth=sys.argv[3])
+        else:
+            perform_pred(sys.argv[1], results_folder=sys.argv[2], 
+                                    test_dir=sys.argv[3])
+    else:
+        print('Too few arguments.')
+
+    #perform_pred('FOGUZ', results_folder="../saved_models/20190612_1048", img_pth=img_test)
     # evaluate loaded model on test data
     # loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
     # score = loaded_model.evaluate(X, Y, verbose=0)

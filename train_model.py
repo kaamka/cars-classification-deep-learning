@@ -4,7 +4,7 @@ from data_preprocessing import create_data_generators
 import json, codecs
 import numpy as np
 import datetime
-import shutil, os
+import shutil, os, pickle
 import matplotlib.pyplot as plt
 from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.python.keras.models import Model, Sequential, load_model
@@ -20,9 +20,10 @@ from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import EarlyStopping
 
-#scp train_model.py inteligate:~/translearn
-#scp hyperparams.json inteligate:~/translearn
-#scp train_model.py create_model.py data_preprocessing.py analyse_results.py demo.py hyperparams.json inteligate:~/translearn
+# scp train_model.py inteligate:~/translearn 
+# scp f.png inteligate:~/translearn
+# scp hyperparams.json inteligate:~/translearn
+# scp train_model.py create_model.py data_preprocessing.py analyse_results.py demo.py hyperparams.json inteligate:~/translearn
 import tensorflow as tf
 tf.test.gpu_device_name()
 
@@ -165,6 +166,9 @@ if __name__ == "__main__":
     generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
                             TRAIN_DIR, TEST_DIR, 
                             save_augumented=None, plot_imgs = False)
+    # class_names = list(generator_train.class_indices.keys())
+    # with open (TRAINING_TIME_PATH+"/class_names.txt", "wb") as fp:
+    #     pickle.dump(class_names, fp)
     finetune_model = finetune_inceptionv3(base_model, transfer_layer, TRAIN_LAYERS, 
                                       dropout=DROPOUT, 
                                       fc_layers=FC_LAYERS, 
