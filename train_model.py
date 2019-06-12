@@ -4,7 +4,7 @@ from data_preprocessing import create_data_generators
 import json, codecs
 import numpy as np
 import datetime
-import os
+import shutil, os
 import matplotlib.pyplot as plt
 from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.python.keras.models import Model, Sequential, load_model
@@ -157,6 +157,8 @@ if __name__ == "__main__":
     TRAINING_TIME_PATH = create_folder_with_results()
     # base_model = ResNet50(weights=WEIGHTS, 
     #                   include_top=False, input_shape=(224,224,3))
+    # save hyperparams file into result folder
+    shutil.copy2(HYPERPARAMS_FILE, TRAINING_TIME_PATH)
     base_model = InceptionV3(weights=WEIGHTS, include_top=False, input_shape=(299,299,3))
     input_shape = base_model.layers[0].output_shape[1:3]
     transfer_layer = base_model.get_layer(index=-1)
