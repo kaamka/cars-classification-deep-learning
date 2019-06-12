@@ -26,11 +26,11 @@ from tensorflow.keras.callbacks import EarlyStopping
 import tensorflow as tf
 tf.test.gpu_device_name()
 
-
+# def load_constants()
 HYPERPARAMS_FILE = 'hyperparams.json'
 
 if (os.getcwd() == '/home/kalkami/translearn'):
-    #inteligate
+    #lhcpgpu1
     TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
     TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
 else:
@@ -93,16 +93,18 @@ def plot_training(history, path_acc, path_loss):
     epochs = range(len(acc))
 
     plt.figure()
-    plt.plot(epochs, acc, 'b')
-    plt.plot(epochs, val_acc, 'r')
+    train_acc_epochs = plt.plot(epochs, acc, 'b', label="Training set accuracy")
+    test_acc_epochs = plt.plot(epochs, val_acc, 'r', label="Validation set accuracy")
     plt.title('Training and validation accuracy')
+    plt.legend()
     plt.savefig(path_acc)
 
     plt.figure()
-    plt.plot(epochs, loss, 'b')
-    plt.plot(epochs, val_loss, 'r')
+    train_loss_epochs = plt.plot(epochs, loss, 'b', label="Training set loss")
+    test_loss_epochs = plt.plot(epochs, val_loss, 'r', label="Training set loss")
     plt.title('Training and validation loss')
     plt.savefig(path_loss)
+    plt.legend()
     plt.show()
     
 
@@ -151,6 +153,7 @@ steps_test = generator_test.n / batch_size
 '''
 
 if __name__ == "__main__":
+    # load_constants()
     TRAINING_TIME_PATH = create_folder_with_results()
     # base_model = ResNet50(weights=WEIGHTS, 
     #                   include_top=False, input_shape=(224,224,3))
