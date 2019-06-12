@@ -1,5 +1,6 @@
 
 hyperparams.json
+hyperparams_tuning.json
 .vscode/
 __pycache__/
 deeplenv/
