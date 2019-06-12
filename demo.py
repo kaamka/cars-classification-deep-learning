@@ -1,10 +1,13 @@
 from keras.preprocessing import image
 import matplotlib.pyplot as plt
+import numpy as np
 import os, random
 import os, random
+from data_preprocessing import create_data_generators
 
+INPUT_SHAPE = (299,299,3)
 
-def load_image(img_path, show=True):
+def load_image(img_path, input_shape, show=True):
 
     img = image.load_img(img_path, target_size=input_shape)
     img_tensor = image.img_to_array(img)                    # (height, width, channels)
@@ -18,7 +21,7 @@ def load_image(img_path, show=True):
 
     return img_tensor
 
-def decode_predictions(preds, top=3):
+def decode_predictions(preds, class_names, top=3):
     results = []
     for pred in preds:
         top_indices = pred.argsort()[-top:][::-1]
@@ -27,10 +30,10 @@ def decode_predictions(preds, top=3):
         results.append(result)
     return results
 
-def predict(img_path, model):
-    img_array = load_image(img_path)
-    pred = model.predict(img_array)
-    print(decode_predictions(pred))
+def predict(img_path, model, input_shape, class_names):
+    img_array = load_image(img_path, input_shape)
+    preds = model.predict(img_array)
+    print(decode_predictions(preds, class_names))
     # Decode the output of the VGG16 model.
     #pred_decoded = decode_predictions(pred)[0]
 
@@ -38,6 +41,10 @@ def predict(img_path, model):
     #for code, name, score in pred_decoded:
         #print("{0:>6.2%} : {1}".format(score, name))
 
+generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
+                                                            TRAIN_DIR, TEST_DIR, 
+                                                            save_augumented=None, 
+                                                            plot_imgs = False)
         
 car_class = 'BMW 3 Series Sedan 2012'
 test_dir = '../DATASETS/carsStanford_all/test/' + car_class
