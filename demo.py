@@ -97,13 +97,25 @@ def perform_pred(car_class, results_folder=RESULTS_FOLDER, test_dir=TEST_DIR_TST
     loaded_model.load_weights(results_folder + "/weights.best.hdf5")
     input_shape = loaded_model.layers[0].output_shape[1:3]
     print("Loaded model from disk")
-    generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
+    
+    if os.path.exists(results_folder+'/class_names.txt'):
+        class_names = []
+        # open file and read the content in a list
+        with open(results_folder+'/class_names.txt', 'r') as filehandle:  
+            for line in filehandle:
+                current_line = line[:-1]
+                class_names.append(current_line)
+    else:
+        generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
                                                                 TRAIN_DIR, TEST_DIR, 
                                                                 save_augumented=None, 
                                                                 plot_imgs = False) 
-    class_names = list(generator_train.class_indices.keys())
-    # with open ("class_names.txt", "wb") as fp:
-    #     pickle.dump(class_names, fp) 
+        class_names = list(generator_train.class_indices.keys())
+        print(class_names)
+        with open(results_folder+'/class_names.txt', 'w') as filehandle:  
+            for listitem in class_names:
+                filehandle.write('%s\n' % listitem)
+            
     predict(test_img, loaded_model, input_shape, class_names, car_class)
 
 

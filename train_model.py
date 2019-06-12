@@ -166,9 +166,10 @@ if __name__ == "__main__":
     generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
                             TRAIN_DIR, TEST_DIR, 
                             save_augumented=None, plot_imgs = False)
-    # class_names = list(generator_train.class_indices.keys())
-    # with open (TRAINING_TIME_PATH+"/class_names.txt", "wb") as fp:
-    #     pickle.dump(class_names, fp)
+    class_names = list(generator_train.class_indices.keys())
+    with open(TRAINING_TIME_PATH+'/class_names.txt', 'w') as filehandle:  
+            for listitem in class_names:
+                filehandle.write('%s\n' % listitem)
     finetune_model = finetune_inceptionv3(base_model, transfer_layer, TRAIN_LAYERS, 
                                       dropout=DROPOUT, 
                                       fc_layers=FC_LAYERS, 
