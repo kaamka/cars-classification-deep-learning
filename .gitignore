@@ -5,3 +5,4 @@ hyperparams_tuning.json
 __pycache__/
 deeplenv/
 create_model.pyc
+.ipynb_checkpoints/demo-checkpoint.ipynb
