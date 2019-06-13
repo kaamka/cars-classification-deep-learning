@@ -23,7 +23,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 # scp train_model.py inteligate:~/translearn 
 # scp f.png inteligate:~/translearn
 # scp hyperparams.json inteligate:~/translearn
-# scp train_model.py create_model.py data_preprocessing.py analyse_results.py demo.py hyperparams.json inteligate:~/translearn
+# scp train_model.py create_model.py demo.ipynb data_preprocessing.py analyse_results.py demo.py hyperparams.json inteligate:~/translearn
 import tensorflow as tf
 tf.test.gpu_device_name()
 

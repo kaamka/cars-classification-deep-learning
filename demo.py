@@ -7,11 +7,9 @@ from data_preprocessing import create_data_generators
 import json
 import pickle
 
-
-# arguments given in terminal: RESULTS_FOLDER, CAR_CLASS
 # default
 RESULTS_FOLDER = "../saved_models/20190610_1512"
-RESULTS_FOLDER = "../saved_models/20190612_1048"
+#RESULTS_FOLDER = "../saved_models/20190612_1048"
 #20190612_1048
 if (os.getcwd() == '/home/kalkami/translearn'):
     #lhcpgpu1
@@ -72,6 +70,18 @@ def predict(img_path, model, input_shape, class_names, correct_class):
     #for code, name, score in pred_decoded:
         #print("{0:>6.2%} : {1}".format(score, name))
 
+def load_model(results_folder, show_accuracy=False):
+    # load json and create model
+    json_file = open(results_folder + '/model.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
+    # load weights into new model
+    loaded_model.load_weights(results_folder + "/weights.best.hdf5")
+    input_shape = loaded_model.layers[0].output_shape[1:3]
+    print("Loaded model from disk")
+    return loaded_model, input_shape
+
 
 def perform_pred(car_class, results_folder=RESULTS_FOLDER, test_dir=TEST_DIR_TST, img_pth=None):
     HYPERPARAMS_FILE =  results_folder+ '/hyperparams.json'
@@ -88,16 +98,9 @@ def perform_pred(car_class, results_folder=RESULTS_FOLDER, test_dir=TEST_DIR_TST
         test_img = test_dir_full + '/' + random.choice(os.listdir(test_dir_full))
     else:
         test_img = img_pth
-    # load json and create model
-    json_file = open(results_folder + '/model.json', 'r')
-    loaded_model_json = json_file.read()
-    json_file.close()
-    loaded_model = model_from_json(loaded_model_json)
-    # load weights into new model
-    loaded_model.load_weights(results_folder + "/weights.best.hdf5")
-    input_shape = loaded_model.layers[0].output_shape[1:3]
-    print("Loaded model from disk")
-    
+
+    loaded_model, input_shape=load_model(results_folder)
+
     if os.path.exists(results_folder+'/class_names.txt'):
         class_names = []
         # open file and read the content in a list
