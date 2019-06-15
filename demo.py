@@ -5,11 +5,11 @@ import numpy as np
 import os, random, sys
 from data_preprocessing import create_data_generators
 import json
-import pickle
+
 
 # default
 RESULTS_FOLDER = "../saved_models/20190610_1512"
-#RESULTS_FOLDER = "../saved_models/20190612_1048"
+RESULTS_FOLDER = "../saved_models/20190612_1048"
 #20190612_1048
 if (os.getcwd() == '/home/kalkami/translearn'):
     #lhcpgpu1
