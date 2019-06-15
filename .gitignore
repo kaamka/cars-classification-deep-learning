@@ -6,4 +6,5 @@ __pycache__/
 deeplenv/
 create_model.pyc
 requirements.txt
+commands_serv.txt
 .ipynb_checkpoints/demo-checkpoint.ipynb

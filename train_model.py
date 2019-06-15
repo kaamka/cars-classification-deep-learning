@@ -19,14 +19,7 @@ from tensorflow.python.keras.optimizers import Adam, RMSprop, Adadelta
 from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import EarlyStopping
-
-# scp train_model.py inteligate:~/translearn 
-# scp inteligate:~/translearn/MODEL ./models/2019-06-09  
-# scp demo.ipynb inteligate:~/translearn
-# scp hyperparams.json inteligate:~/translearn
-# scp requirements.txt inteligate:~/translearn_cpu
-# scp requirements.txt train_model.py create_model.py demo.ipynb data_preprocessing.py analyse_results.py demo.py hyperparams.json inteligate:~/translearn
-import tensorflow as tf
+#import tensorflow as tf
 tf.test.gpu_device_name()
 
 # def load_constants()
