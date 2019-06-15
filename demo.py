@@ -11,7 +11,7 @@ import json
 RESULTS_FOLDER = "../saved_models/20190610_1512"
 RESULTS_FOLDER = "../saved_models/20190612_1048"
 #20190612_1048
-if (os.getcwd() == '/home/kalkami/translearn'):
+if (os.getcwd() == '/home/kalkami/translearn'or os.getcwd() == '/home/kalkami/translearn_cpu'):
     #lhcpgpu1
     TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
     TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'

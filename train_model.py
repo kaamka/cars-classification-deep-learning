@@ -20,12 +20,12 @@ from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import EarlyStopping
 #import tensorflow as tf
-tf.test.gpu_device_name()
+#tf.test.gpu_device_name()
 
 # def load_constants()
 HYPERPARAMS_FILE = 'hyperparams.json'
 
-if (os.getcwd() == '/home/kalkami/translearn'):
+if (os.getcwd() == '/home/kalkami/translearn' or os.getcwd() == '/home/kalkami/translearn_cpu'):
     #lhcpgpu1
     TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
     TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
