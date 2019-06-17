@@ -89,19 +89,20 @@ def plot_training(history, path_acc, path_loss):
     epochs = range(len(acc))
 
     plt.figure()
-    train_acc_epochs = plt.plot(epochs, acc, 'b', label="Training set accuracy")
-    test_acc_epochs = plt.plot(epochs, val_acc, 'r', label="Validation set accuracy")
+    plt.plot(epochs, acc, 'b', label="Training set accuracy")
+    plt.plot(epochs, val_acc, 'r', label="Validation set accuracy")
     plt.title('Training and validation accuracy')
     plt.legend()
     plt.savefig(path_acc)
 
     plt.figure()
-    train_loss_epochs = plt.plot(epochs, loss, 'b', label="Training set loss")
-    test_loss_epochs = plt.plot(epochs, val_loss, 'r', label="Training set loss")
+    plt.plot(epochs, loss, 'b', label="Training set loss")
+    plt.plot(epochs, val_loss, 'r', label="Training set loss")
     plt.title('Training and validation loss')
-    plt.savefig(path_loss)
     plt.legend()
     plt.show()
+    plt.savefig(path_loss)
+
     
 
 
