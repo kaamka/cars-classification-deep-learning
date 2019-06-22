@@ -22,14 +22,13 @@ def create_data_generators(input_shape, batch_size,
                             save_augumented=False, plot_imgs = False):
     datagen_train = ImageDataGenerator(
       rescale=1./255,
-      rotation_range=180,
+      rotation_range=20.,
       width_shift_range=0.1,
       height_shift_range=0.1,
-      shear_range=0.1,
-      zoom_range=[0.9, 1.5],
+      zoom_range=0.2,
       horizontal_flip=True,
-      vertical_flip=True,
       fill_mode='nearest')
+
     datagen_test = ImageDataGenerator(rescale=1./255)
 
     if save_augumented:
