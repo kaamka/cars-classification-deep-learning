@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os, random, sys
 from data_preprocessing import create_data_generators
+from test_resizing import resize_to_square
 import json
 
 
@@ -23,12 +24,14 @@ else:
     TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
     TRAIN_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/train'
     TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/test'
-    #TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/CARS_GOOGLE_IMG/downloads'
+    TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/CARS_GOOGLE_IMG/downloads'
 
 
 def load_image(img_path, input_shape, show=False):
-    img_org = image.load_img(img_path) 
-    img = image.load_img(img_path, target_size=input_shape)
+    image_resized = resize_to_square(input_shape[1], img_path)
+    img_org = image.load_img(img_path)
+    img = image_resized
+    #img = image.load_img(image_resized, target_size=input_shape)
     img_tensor = image.img_to_array(img)                    # (height, width, channels)
     img_tensor = np.expand_dims(img_tensor, axis=0)         # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
     img_tensor /= 255.                                      # imshow expects values in the range [0, 1]
@@ -100,7 +103,7 @@ def perform_pred(car_class, results_folder=RESULTS_FOLDER, test_dir=TEST_DIR_TST
         test_img = img_pth
 
     loaded_model, input_shape=load_model(results_folder)
-
+    print (input_shape[1])
     if os.path.exists(results_folder+'/class_names.txt'):
         class_names = []
         # open file and read the content in a list
@@ -143,7 +146,7 @@ if __name__ == "__main__":
             perform_pred(sys.argv[1], results_folder=sys.argv[2], 
                                     test_dir=sys.argv[3])
     else:
-        print('Too few arguments.')
+        print('Too much arguments.')
 
     #perform_pred('FOGUZ', results_folder="../saved_models/20190612_1048", img_pth=img_test)
     # evaluate loaded model on test data
