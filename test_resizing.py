@@ -23,12 +23,21 @@ def resize_to_square(desired_size, im_pth, overwrite = False):
     return new_im
 
 if __name__ == "__main__":
-    folder = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all_resized/test'
+    if (os.getcwd() == '/home/kalkami/translearn' or os.getcwd() == '/home/kalkami/translearn_cpu'):
+        #lhcpgpu1
+        TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
+        TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
+    else:
+        #local
+        TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/train'
+        TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
+        #folder = '../google_imgs/downloads'
+    folders = [TRAIN_DIR, TEST_DIR]
     desired_size = 299
-    #folder = '../google_imgs/downloads'
-    for subfol in os.scandir(folder):
-        for img in os.scandir(subfol):
-            if os.path.isfile(img):
-                print(img.name)
-                resize_to_square(desired_size, os.path.abspath(img), overwrite=True)
-            #resize_to_square(desired_size, im_pth)
+    for folder in folders:
+        for subfol in os.scandir(folder):
+            for img in os.scandir(subfol):
+                if os.path.isfile(img):
+                    print(img.name)
+                    resize_to_square(desired_size, os.path.abspath(img), overwrite=True)
+                #resize_to_square(desired_size, im_pth)
