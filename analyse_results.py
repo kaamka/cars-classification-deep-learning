@@ -7,6 +7,62 @@ import numpy as np
 '''contains'''
 #make class?
 
+
+def load_image(img_path, input_shape, show=False):
+    image_resized = resize_to_square(input_shape[1], img_path)
+    img_org = image.load_img(img_path)
+    img = image_resized
+    #img = image.load_img(image_resized, target_size=input_shape)
+    img_tensor = image.img_to_array(img)                    # (height, width, channels)
+    img_tensor = np.expand_dims(img_tensor, axis=0)         # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
+    img_tensor /= 255.                                      # imshow expects values in the range [0, 1]
+
+    if show:
+        plt.imshow(img_org)                           
+        plt.axis('off')
+        plt.show()
+
+    return img_tensor
+
+
+        
+def generate_data_generators(input_shape):
+    generator_train, generator_test = create_data_generators(input_shape, BATCHSIZE, 
+                                                                TRAIN_DIR, TEST_DIR, 
+                                                                save_augumented=None, 
+                                                                plot_imgs = False)
+    return generator_train, generator_test
+        
+        
+def load_model(results_folder):
+    # load json and create model
+    json_file = open(results_folder + '/model.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
+    # load weights into new model
+    loaded_model.load_weights(results_folder + "/weights.best.hdf5")
+    input_shape = loaded_model.layers[0].output_shape[1:3]
+    print("Loaded model from disk")
+    return loaded_model, input_shape
+
+
+
+def print_confusion_matrix(cls_pred, cls_test, class_names, cmap=plt.cm.Blues):
+    '''Helper-function for printing confusion matrix'''
+    # cls_pred is an array of the predicted class-number for
+    # all images in the test-set.
+    # Get the confusion matrix using sklearn.
+    cm = confusion_matrix(y_true=cls_test,  # True class for test-set.
+                          y_pred=cls_pred)  # Predicted class.
+    print("Confusion matrix:")
+    # Print the confusion matrix as text.
+    #print(cm)
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    # Print the class-names for easy reference.
+    for i, class_name in enumerate(class_names):
+        print("({0}) {1}".format(i, class_name))
+
 def path_join(dirname, filenames):
     return [os.path.join(dirname, filename) for filename in filenames]
 
@@ -64,7 +120,7 @@ def plot_images(images, cls_true, class_names, cls_pred=None, smooth=True):
     
 
 
-def print_confusion_matrix(cls_pred, cls_test, class_names):
+def print_confusion_matrix2(cls_pred, cls_test, class_names):
     '''Helper-function for printing confusion matrix'''
     # cls_pred is an array of the predicted class-number for
     # all images in the test-set.

@@ -55,8 +55,9 @@ def finetune_resnet50_model(base_model, transfer_layer, x_trainable, dropout, fc
 
 
 def finetune_inceptionv3(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes, new_weights = ""):
-    for layer in base_model.layers[:-x_trainable]:
-        layer.trainable = False
+    if x_trainable != 0:
+        for layer in base_model.layers[:-x_trainable]:
+            layer.trainable = False
 
     x = transfer_layer.output
     x = GlobalAveragePooling2D(name='avg_pool')(x)
