@@ -4,10 +4,11 @@ import os
 #im_pth = '../test_imgs/skoda2.jpg'
 
 #/Desktop/InteliGate/CLASSIFICATION/VMMR/google_imgs/downloads
-def resize_to_square(desired_size, im_pth, overwrite = False):
+def resize_to_square(desired_size, im_pth, overwrite = False, print_oldsize=True):
     im = Image.open(im_pth)
     old_size = im.size  # old_size[0] is in (width, height) format
-    print(old_size)
+    if print_oldsize:
+        print(old_size)
     ratio = float(desired_size)/max(old_size)
     new_size = tuple([int(x*ratio) for x in old_size])
     # use thumbnail() or resize() method to resize the input image
