@@ -8,3 +8,6 @@ create_model.pyc
 requirements.txt
 commands_serv.txt
 .ipynb_checkpoints/demo-checkpoint.ipynb
+img_3to1_channel-checkpoint.ipynb
+.ipynb_checkpoints/img_3to1_channel-checkpoint.ipynb
+img_3to1_channel.ipynb
