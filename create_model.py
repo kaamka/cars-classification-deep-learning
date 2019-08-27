@@ -60,11 +60,14 @@ def finetune_inceptionv3(base_model, transfer_layer, x_trainable, dropout, fc_la
         for layer in base_model.layers[:-x_trainable]:
             layer.trainable = False
             freeze = freeze + 1
+    else:
+        for layer in base_model.layers:
+            layer.trainable = True
     all_lay = 0
     for layer in base_model.layers:
         all_lay = all_lay + 1
-    print("Model with {} freezed layers.", freeze)
-    print("All layers {} .", all_lay)
+    print("Model with {} freezed layers.".format(freeze))
+    print("All layers {} .".format(all_lay))
     x = transfer_layer.output
     x = GlobalAveragePooling2D(name='avg_pool')(x)
     x = Dropout(dropout)(x)
@@ -76,7 +79,7 @@ def finetune_inceptionv3(base_model, transfer_layer, x_trainable, dropout, fc_la
 
 
 if __name__ == "__main__":
-    base_model = InceptionV3(include_top=False, weights = 'imagenet', input_shape=(224,224,3))
+    base_model = InceptionV3(include_top=False, weights = 'imagenet', input_shape=(299,299,3))
     input_shape = base_model.layers[0].output_shape[1:3]
     transfer_layer = base_model.get_layer(index=-1)
     print(transfer_layer)                
