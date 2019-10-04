@@ -1,6 +1,6 @@
 from create_model import finetune_vgg16_model, finetune_resnet50_model
 from create_model import finetune_inceptionv3
-from data_preprocessing import create_data_generators
+from create_datagenerators import create_data_generators
 import json, codecs
 import numpy as np
 import datetime
