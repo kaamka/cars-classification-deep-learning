@@ -1,5 +1,3 @@
-from analyse_results import plot_images, load_images
-from analyse_results import path_join
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import json
 
@@ -16,6 +14,9 @@ class_weight = compute_class_weight(class_weight='balanced',
 steps_per_epoch = generator_train.n / batch_size 
 steps_test = generator_test.n / batch_size
 '''
+
+def path_join(dirname, filenames):
+    return [os.path.join(dirname, filename) for filename in filenames]
 
 def create_data_generators(input_shape, batch_size, 
                             train_dir, test_dir, 
@@ -46,26 +47,7 @@ def create_data_generators(input_shape, batch_size,
                                                   target_size=input_shape,
                                                   batch_size=batch_size,
                                                   shuffle=False)
-    if plot_imgs:
-        plot_some_images(train_dir, generator_train)
     return generator_train, generator_test
-
-
-def plot_some_images(train_dir, generator_train):
-
-    image_paths_train = path_join(train_dir, generator_train.filenames)
-    #image_paths_test = path_join(test_dir, generator_test.filenames)
-
-    # Load the first images from the train-set.
-    images = load_images(image_paths=image_paths_train[555:564])
-
-    # Get the true classes for those images.
-    cls_train = generator_train.classes
-    cls_true = cls_train[555:564]
-
-    # Plot the images and labels using our helper-function above.
-    class_names = list(generator_train.class_indices.keys())
-    plot_images(images=images, cls_true=cls_true, class_names = class_names, smooth=True)
 
 
 if __name__ == "__main__":
