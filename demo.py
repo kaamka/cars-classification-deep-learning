@@ -3,7 +3,7 @@ from tensorflow.keras.models import model_from_json
 import matplotlib.pyplot as plt
 import numpy as np
 import os, random, sys
-from data_preprocessing import create_data_generators
+from create_datagenerators import create_data_generators
 from test_resizing import resize_to_square
 import json
 
