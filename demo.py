@@ -31,20 +31,14 @@ TEST_DIR ='DATASETS/Stanford_Dataset_sorted/test'
 #     TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/CARS_GOOGLE_IMG/downloads'
 
 
-def load_image(img_path, input_shape, show=False):
-    image_resized = resize_to_square(input_shape[1], img_path)
-    img_org = image.load_img(img_path)
-    img = image_resized
-    #img = image.load_img(image_resized, target_size=input_shape)
+def load_image(img_path, input_shape, resize = False):
+    if resize:
+        img, pth = resize_black(input_shape[1], img_path, print_oldsize=False)
+    else:
+        img = image.load_img(img_path, target_size=input_shape)
     img_tensor = image.img_to_array(img)                    # (height, width, channels)
     img_tensor = np.expand_dims(img_tensor, axis=0)         # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
     img_tensor /= 255.                                      # imshow expects values in the range [0, 1]
-
-    if show:
-        plt.imshow(img_org)                           
-        plt.axis('off')
-        plt.show()
-
     return img_tensor
 
 def decode_predictions(preds, class_names, top=5):
