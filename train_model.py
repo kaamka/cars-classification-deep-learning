@@ -22,17 +22,22 @@ from tensorflow.keras.callbacks import EarlyStopping
 #import tensorflow as tf
 #tf.test.gpu_device_name()
 
-# def load_constants()
-HYPERPARAMS_FILE = 'hyperparams.json'
 
-if (os.getcwd() == '/home/kalkami/translearn' or os.getcwd() == '/home/kalkami/translearn_cpu'):
-    #lhcpgpu1
-    TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
-    TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
-else:
-    #local
-    TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/train'
-    TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
+## DEFAULT PATHS
+HYPERPARAMS_FILE = 'hyperparams.json'
+TRAIN_DIR = 'DATASETS/Stanford_Dataset_sorted/train'
+TEST_DIR = 'DATASETS/Stanford_Dataset_sorted/test'
+SAVE_RESULRS_DIR = 'saved_models/'
+
+
+# if (os.getcwd() == '/home/kalkami/translearn' or os.getcwd() == '/home/kalkami/translearn_cpu'):
+#     #lhcpgpu1
+#     TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
+#     TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
+# else:
+#     #local
+#     TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/train'
+#     TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
 
 with open(HYPERPARAMS_FILE, "r") as read_file:
     data = json.load(read_file)
