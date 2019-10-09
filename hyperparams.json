@@ -1,0 +1,14 @@
+{
+    "hyperparameters": [
+        {
+            "WEIGHTS": "imagenet", 
+            "EPOCHS": 250, 
+            "BATCHSIZE": 16, 
+            "LEARN_RATE": 0.0001, 
+            "DROPOUT": 0.5, 
+            "TRAIN_LAYERS":0,
+            "FC_LAYERS": [1024, 1024],
+            "NEW_WEIGHTS": ""
+        }
+    ]
+}
