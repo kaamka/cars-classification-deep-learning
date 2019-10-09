@@ -1,0 +1,1 @@
+Directory for dataset. Main directory (e.g. Stanford_Dataset_sorted) should contain subdirectories (train/ and test/) and subdirectories inside each of them (one subdirectorie per one class).
