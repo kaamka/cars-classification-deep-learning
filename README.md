@@ -42,7 +42,8 @@ Example usage:
 python3 demo.py 'Tesla Model S Sedan 2012' '../test_imgs/tesla.png'
 ```
 Output:
-![output  0](imgs/pasted_image_0.png)
+
+![0](imgs/pasted_image_0.png)
 
 
 [[('Tesla Model S Sedan 2012', 0.99994814), ('Aston Martin V8 Vantage Coupe 2012', 9.0942467e-06), ('Hyundai Veloster Hatchback 2012', 6.253455e-06), ('Volkswagen Golf Hatchback 2012', 3.5931739e-06), ('Acura ZDX Hatchback 2012',2.7549402e-06)]]
@@ -54,6 +55,7 @@ python3 demo.py 'Audi A5 Coupe 2012'
 ```
 
 Output:
+
 ![output  1](imgs/pasted_image_1.png)
 
 
