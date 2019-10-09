@@ -42,7 +42,7 @@ Example usage:
 python3 demo.py 'Tesla Model S Sedan 2012' '../test_imgs/tesla.png'
 ```
 Output:
-![output  0](https://github.com/kaamka/cars-classification-deep-learning/cars-classification-deep-learning/imgs/pasted_image_0.png)
+![output  0](imgs/pasted_image_0.png)
 
 
 [[('Tesla Model S Sedan 2012', 0.99994814), ('Aston Martin V8 Vantage Coupe 2012', 9.0942467e-06), ('Hyundai Veloster Hatchback 2012', 6.253455e-06), ('Volkswagen Golf Hatchback 2012', 3.5931739e-06), ('Acura ZDX Hatchback 2012',2.7549402e-06)]]
@@ -54,7 +54,7 @@ python3 demo.py 'Audi A5 Coupe 2012'
 ```
 
 Output:
-![output  1](https://github.com/kaamka/cars-classification-deep-learning/cars-classification-deep-learning/imgs/pasted_image_1.png)
+![output  1](imgs/pasted_image_1.png)
 
 
 [[('Audi S4 Sedan 2012', 0.88584036), ('Audi A5 Coupe 2012', 0.11131641), ('Audi TTS Coupe 2012', 0.0016650328), ('Audi S6 Sedan 2011', 0.00045785238), ('Audi S4Sedan 2007', 8.3126331e-05)]]
@@ -67,9 +67,9 @@ python3 demo.py 'Volkswagen Golf Hatchback 2012' "../saved_models/BEST_OF_THE_BE
 
 There is also  version for Jupyer Notebook. There are similar options of usage. Examples:
 
-![output  2](https://github.com/kaamka/cars-classification-deep-learning/cars-classification-deep-learning/imgs/pasted_image_2.png)
+![output  2](imgs/pasted_image_2.png)
 
-![output  3](https://github.com/kaamka/cars-classification-deep-learning/cars-classification-deep-learning/imgs/pasted_image_3.png)
+![output  3](imgs/pasted_image_3.png)
 
 
 ### Train your own model
@@ -130,7 +130,7 @@ In order to analyse the results (confusion matrix, accuracy within each of the c
 
 Example statistics created with *analyse_results.ipynb* (for BMW 3 Series Sedan 2012):
 
-![output  4](https://github.com/kaamka/cars-classification-deep-learning/cars-classification-deep-learning/imgs/pasted_image_4.png)
+![output  4](imgs/pasted_image_4.png)
 
 
 ## Bibliography
