@@ -7,5 +7,4 @@ deeplenv/
 requirements.txt
 commands_serv.txt
 img_3to1_channel.ipynb
-analyse_all.py
 .ipynb_checkpoints/
