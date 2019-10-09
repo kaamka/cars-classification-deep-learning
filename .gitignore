@@ -1,18 +1,11 @@
 
 hyperparams.json
-hyperparams_tuning.json
 .vscode/
 __pycache__/
 deeplenv/
-create_model.pyc
+*.pyc
 requirements.txt
 commands_serv.txt
-.ipynb_checkpoints/demo-checkpoint.ipynb
-img_3to1_channel-checkpoint.ipynb
-.ipynb_checkpoints/img_3to1_channel-checkpoint.ipynb
 img_3to1_channel.ipynb
 analyse_all.py
-.ipynb_checkpoints/Template_Transfer_Learning-checkpoint.ipynb
-.ipynb_checkpoints/demo-checkpoint.ipynb
-.ipynb_checkpoints/analyse_results-checkpoint.ipynb
-.ipynb_checkpoints/demo-checkpoint.ipynb
+.ipynb_checkpoints/
