@@ -1,8 +1,8 @@
 # cars-classification-deep-learning (IntelliGate project) 
 
-**IntelliGate project** is aimed to create a system for an entrance gate which is able to fully recognize an approaching car. Car recognition involves recognition of a made and model of a car exploiting its shape (1), company logo recognition (2) reading and interpretation of number plate of a car. (3).
+**IntelliGate project** is aimed to create a system for an entrance gate which is able to fully recognize an approaching car. Car recognition involves recognition of a make and model of a car exploiting its shape (1), company logo recognition (2) reading and interpretation of number plate of a car. (3).
 
-This repository contains files and description concerning the (1) part of the project: **recognition of a made and model of a car**.
+This repository contains files and description concerning the (1) part of the project: **recognition of a make and model of a car**.
 
 The classification algorithm was created by transfer learning and fine-tuning Inception-v3 network [1] [2] with Cars Dataset from Stanford [3]. Keras implementation of Inception-v3 was used [4].
 Final model is able to recognize 195 different classes of cars with overall accuracy of 81%. 
