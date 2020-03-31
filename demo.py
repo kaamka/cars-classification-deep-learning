@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os, random, sys
 from create_datagenerators import create_data_generators
-from test_resizing import resize_to_square
 import json
 
 
@@ -146,15 +145,4 @@ if __name__ == "__main__":
     else:
         print('Too much arguments.')
 
-    #perform_pred('FOGUZ', results_folder="../saved_models/20190612_1048", img_pth=img_test)
-    # evaluate loaded model on test data
-    # loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-    # score = loaded_model.evaluate(X, Y, verbose=0)
-    # print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1]*100))       
-    #test_img = '../DATASETS/test_imgs/f.png'
 
-    # load model weigths & structure simultanously
-    # model_path = NEW_MODEL_PATH
-    # model_path = 'saved_models/20190502_1643/vgg16_.h5'
-    # model = load_model(model_path)
-    # load_image(test_img)
