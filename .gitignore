@@ -6,3 +6,4 @@ requirements.txt
 commands_serv.txt
 img_3to1_channel.ipynb
 .ipynb_checkpoints/
+*.hdf5
