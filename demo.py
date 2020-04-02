@@ -5,29 +5,32 @@ import numpy as np
 import os, random, sys
 from create_datagenerators import create_data_generators
 import json
+from sklearn.metrics import confusion_matrix
+from data_preprocessing import resize_white, resize_black
+from tensorflow.keras.utils import plot_model
+from collections import Counter
 
 
-# default
-SAVE_RESULRS_DIR = 'saved_models/'
-RESULTS_FOLDER = SAVE_RESULRS_DIR + '/20190701_1148'
-TRAIN_DIR = 'DATASETS/Stanford_Dataset_sorted/train'
-TEST_DIR ='DATASETS/Stanford_Dataset_sorted/test'
-
-
-# #20190612_1048
-# if (os.getcwd() == '/home/kalkami/translearn'or os.getcwd() == '/home/kalkami/translearn_cpu'):
-#     #lhcpgpu1
-#     TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
-#     TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
-#     TRAIN_DIR_TST = TRAIN_DIR
-#     TEST_DIR_TST = TEST_DIR
-# else:
-#     #local
-#     TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/train'
-#     TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
-#     TRAIN_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/train'
-#     TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/test'
-#     TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/CARS_GOOGLE_IMG/downloads'
+#20190612_1048
+if (os.getcwd() == '/home/kalkami/translearn'or os.getcwd() == '/home/kalkami/translearn_cpu'):
+    #lhcpgpu1
+    TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
+    TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
+    TRAIN_DIR_TST = TRAIN_DIR
+    TEST_DIR_TST = TEST_DIR
+elif (os.getcwd() == '/home/kamila/Desktop/InteliGate/CLASSIFICATION/VMMR/cars-classification-deep-learning'):
+    #local
+    TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/train'
+    TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
+    TRAIN_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/train'
+    TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_all/test'
+    TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/CARS_GOOGLE_IMG/downloads'
+else:
+    # default
+    SAVE_RESULRS_DIR = 'saved_models/'
+    RESULTS_FOLDER = SAVE_RESULRS_DIR + '/20190701_1148'
+    TRAIN_DIR = 'DATASETS/Stanford_Dataset_sorted/train'
+    TEST_DIR ='DATASETS/Stanford_Dataset_sorted/test'
 
 
 def load_image(img_path, input_shape, resize = False):
