@@ -10,6 +10,8 @@ from data_preprocessing import resize_white, resize_black
 from tensorflow.keras.utils import plot_model
 from collections import Counter
 
+SAVE_RESULRS_DIR = 'saved_models/'
+RESULTS_FOLDER = SAVE_RESULRS_DIR + '/20190701_1148'
 
 #20190612_1048
 if (os.getcwd() == '/home/kalkami/translearn'or os.getcwd() == '/home/kalkami/translearn_cpu'):
@@ -27,11 +29,10 @@ elif (os.getcwd() == '/home/kamila/Desktop/InteliGate/CLASSIFICATION/VMMR/cars-c
     TEST_DIR_TST = '/media/kamila/System/Users/Kama/Documents/DATASETS/CARS_GOOGLE_IMG/downloads'
 else:
     # default
-    SAVE_RESULRS_DIR = 'saved_models/'
-    RESULTS_FOLDER = SAVE_RESULRS_DIR + '/20190701_1148'
     TRAIN_DIR = 'DATASETS/Stanford_Dataset_sorted/train'
     TEST_DIR ='DATASETS/Stanford_Dataset_sorted/test'
-
+    TRAIN_DIR_TST = TRAIN_DIR
+    TEST_DIR_TST = TEST_DIR
 
 def load_image(img_path, input_shape, resize = False):
     if resize:
