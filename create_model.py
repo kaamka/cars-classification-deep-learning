@@ -17,14 +17,16 @@ from tensorflow.python.keras.optimizers import Adam, RMSprop, Adadelta
 
 def finetune_vgg16_model(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes, new_weights = ""):
     # number of freezed layers: 0 (by a default)
-    freeze = 0
-    if x_trainable == 0:
-        for layer in base_model.layers:
-            layer.trainable = False
-    else:
-        for layer in base_model.layers[:-x_trainable]:
-            layer.trainable = False
-            freeze = freeze + 1    
+    freezed_layers = 0
+    if x_trainable != "all":
+        if x_trainable == 0:
+            for layer in base_model.layers:
+                layer.trainable = False
+                freezed_layers = freezed_layers + 1
+        else:
+            for layer in base_model.layers[:-x_trainable]:
+                layer.trainable = False
+                freezed_layers = freezed_layers + 1  
     all_layers = len(base_model.layers)
     print("Number of all layers in a feature-extractor part of model: {}.".format(all_layers))
     print("Number of freezed (untrainable) layers in a feature-extractor part of model: {}.".format(freeze))
@@ -45,15 +47,17 @@ def finetune_vgg16_model(base_model, transfer_layer, x_trainable, dropout, fc_la
 
 
 def finetune_resnet50_model(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes, new_weights = ""):
-     # number of freezed layers: 0 (by a default)
-    freeze = 0
-    if x_trainable == 0:
-        for layer in base_model.layers:
-            layer.trainable = False
-    else:
-        for layer in base_model.layers[:-x_trainable]:
-            layer.trainable = False
-            freeze = freeze + 1    
+    # number of freezed layers: 0 (by a default)
+    freezed_layers = 0
+    if x_trainable != "all":
+        if x_trainable == 0:
+            for layer in base_model.layers:
+                layer.trainable = False
+                freezed_layers = freezed_layers + 1
+        else:
+            for layer in base_model.layers[:-x_trainable]:
+                layer.trainable = False
+                freezed_layers = freezed_layers + 1      
     all_layers = len(base_model.layers)
     print("Number of all layers in a feature-extractor part of model: {}.".format(all_layers))
     print("Number of freezed (untrainable) layers in a feature-extractor part of model: {}.".format(freeze))
@@ -69,17 +73,19 @@ def finetune_resnet50_model(base_model, transfer_layer, x_trainable, dropout, fc
 
 def finetune_inceptionv3(base_model, transfer_layer, x_trainable, dropout, fc_layers, num_classes, new_weights = ""):
     # number of freezed layers: 0 (by a default)
-    freeze = 0
-    if x_trainable == 0:
-        for layer in base_model.layers:
-            layer.trainable = False
-    else:
-        for layer in base_model.layers[:-x_trainable]:
-            layer.trainable = False
-            freeze = freeze + 1    
+    freezed_layers = 0
+    if x_trainable != "all":
+        if x_trainable == 0:
+            for layer in base_model.layers:
+                layer.trainable = False
+                freezed_layers = freezed_layers + 1
+        else:
+            for layer in base_model.layers[:-x_trainable]:
+                layer.trainable = False
+                freezed_layers = freezed_layers + 1    
     all_layers = len(base_model.layers)
     print("Number of all layers in a feature-extractor part of model: {}.".format(all_layers))
-    print("Number of freezed (untrainable) layers in a feature-extractor part of model: {}.".format(freeze))
+    print("Number of freezed (untrainable) layers in a feature-extractor part of model: {}.".format(freezed_layers))
     # adding custom layers to the classification part of a model
     x = transfer_layer.output
     x = GlobalAveragePooling2D(name='avg_pool')(x)
@@ -96,7 +102,7 @@ if __name__ == "__main__":
     input_shape = base_model.layers[0].output_shape[1:3]
     transfer_layer = base_model.get_layer(index=-1)
     print(transfer_layer)                
-    new_model = finetune_inceptionv3(base_model, transfer_layer, 5, 0.5, [1024, 1024], 196)
+    new_model = finetune_inceptionv3(base_model, transfer_layer, "all", 0.5, [1024, 1024], 196)
     optimizer = Adam(lr=0.000001)
     #new_model.load_weights('../saved_models/20190530_1112/weights.best.hdf5')
     new_model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
