@@ -46,8 +46,6 @@ else:
     TEST_DIR ='DATASETS/Stanford_Dataset_sorted/test'
 
 
-print (TEST_DIR, TRAIN_DIR)
-
 with open(HYPERPARAMS_FILE, "r") as read_file:
     data = json.load(read_file)
 
@@ -70,11 +68,11 @@ def create_folder_with_results():
     access_rights = 0o755
     try:  
         os.makedirs(TRAINING_TIME_PATH, access_rights)
-    except OSError:  
-        print ("Creation of the directory %s failed" % TRAINING_TIME_PATH)
-    else:  
         print ("Successfully created the directory %s" % TRAINING_TIME_PATH)
         return TRAINING_TIME_PATH
+    except: 
+        print ("Creation of the directory %s failed" % TRAINING_TIME_PATH)
+
 
 def saveHist(path,history):
     new_hist = {}
@@ -165,9 +163,8 @@ steps_test = generator_test.n / batch_size
 
 if __name__ == "__main__":
     # load_constants()
+    print (TEST_DIR, TRAIN_DIR)
     TRAINING_TIME_PATH = create_folder_with_results()
-    # base_model = ResNet50(weights=WEIGHTS, 
-    #                   include_top=False, input_shape=(224,224,3))
     # save hyperparams file into result folder
     shutil.copy2(HYPERPARAMS_FILE, TRAINING_TIME_PATH)
     base_model = InceptionV3(weights=WEIGHTS, include_top=False, input_shape=(299,299,3))
