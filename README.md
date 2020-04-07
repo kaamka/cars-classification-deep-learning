@@ -21,6 +21,7 @@ Dependencies:
 - [Jupyter Notebook](https://jupyter.org/)
 - [Pillow](https://pypi.org/project/Pillow/2.2.2/)
 - [Scikit-learn](https://scikit-learn.org/stable/)
+- [h5py](https://www.h5py.org/)
 
 
 ## Usage
