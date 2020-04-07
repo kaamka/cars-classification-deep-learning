@@ -46,6 +46,8 @@ else:
     TEST_DIR ='DATASETS/Stanford_Dataset_sorted/test'
 
 
+print (TEST_DIR, TRAIN_DIR)
+
 with open(HYPERPARAMS_FILE, "r") as read_file:
     data = json.load(read_file)
 
