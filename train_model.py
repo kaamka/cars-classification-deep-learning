@@ -30,14 +30,21 @@ TEST_DIR = 'DATASETS/Stanford_Dataset_sorted/test'
 SAVE_RESULRS_DIR = 'saved_models/'
 
 
-# if (os.getcwd() == '/home/kalkami/translearn' or os.getcwd() == '/home/kalkami/translearn_cpu'):
-#     #lhcpgpu1
-#     TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
-#     TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
-# else:
-#     #local
-#     TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/train'
-#     TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
+#20190612_1048
+if (os.getcwd() == '/home/kalkami/translearn'or os.getcwd() == '/home/kalkami/translearn_cpu'):
+    #lhcpgpu1
+    TRAIN_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/train'
+    TEST_DIR = '/data/IntelliGate/kalkami/DATASETS/carsStanford_all/test'
+elif (os.getcwd() == '/home/kamila/Desktop/InteliGate/CLASSIFICATION/VMMR/cars-classification-deep-learning'):
+    #local
+    TRAIN_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/train'
+    TEST_DIR = '/media/kamila/System/Users/Kama/Documents/DATASETS/carsStanford_s/test'
+
+else:
+    # default
+    TRAIN_DIR = 'DATASETS/Stanford_Dataset_sorted/train'
+    TEST_DIR ='DATASETS/Stanford_Dataset_sorted/test'
+
 
 with open(HYPERPARAMS_FILE, "r") as read_file:
     data = json.load(read_file)
